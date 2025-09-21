@@ -2,7 +2,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import LoginPageWrapper from "./pages/LoginPageWrapper";
 import DashboardPage from "./pages/DashboardPage";
 import TeamsPage from "./pages/TeamsPage";
@@ -14,27 +15,26 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-// Protected Route Component
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+// Auth check utility
+const isAuthenticated = () => {
   const token = localStorage.getItem("token");
   const user = localStorage.getItem("user");
-  
-  if (!token || !user) {
+  return !!(token && user);
+};
+
+// Protected Route Component - now properly inside Router context
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  if (!isAuthenticated()) {
     return <Navigate to="/" replace />;
   }
-  
   return <>{children}</>;
 };
 
-// Public Route Component (redirect to dashboard if already logged in)
+// Public Route Component - now properly inside Router context  
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
-  const token = localStorage.getItem("token");
-  const user = localStorage.getItem("user");
-  
-  if (token && user) {
+  if (isAuthenticated()) {
     return <Navigate to="/dashboard" replace />;
   }
-  
   return <>{children}</>;
 };
 
@@ -101,7 +101,6 @@ const App = () => (
               </ProtectedRoute>
             } 
           />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
