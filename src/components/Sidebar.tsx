@@ -89,7 +89,7 @@ export default function Sidebar({ isMobileOpen, onMobileToggle }: SidebarProps) 
       {/* Logo */}
       <div className="px-6 py-6 border-b border-sidebar-border">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8">
+          <div className="w-8 h-8" role="img" aria-label="Logo InnoSistemas">
             <svg viewBox="0 0 40 40" fill="none" className="w-full h-full">
               <path d="M8 32L20 8L32 32H8Z" fill="hsl(var(--primary))" />
               <circle cx="20" cy="20" r="6" fill="hsl(var(--secondary))" />
@@ -108,8 +108,8 @@ export default function Sidebar({ isMobileOpen, onMobileToggle }: SidebarProps) 
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-6">
-        <ul className="space-y-2">
+      <nav className="flex-1 px-4 py-6" aria-label="Navegación principal">
+        <ul className="space-y-2" role="list">
           {navigationItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -117,7 +117,7 @@ export default function Sidebar({ isMobileOpen, onMobileToggle }: SidebarProps) 
                 <NavLink
                   to={item.href}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    `flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
                       isActive
                         ? "bg-primary text-primary-foreground"
                         : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
@@ -129,8 +129,13 @@ export default function Sidebar({ isMobileOpen, onMobileToggle }: SidebarProps) 
                     }
                   }}
                 >
-                  <Icon className="h-5 w-5" />
-                  {item.name}
+                  {({ isActive }) => (
+                    <>
+                      <Icon className="h-5 w-5" aria-hidden="true" />
+                      {item.name}
+                      {isActive && <span className="sr-only">(página actual)</span>}
+                    </>
+                  )}
                 </NavLink>
               </li>
             );
@@ -144,9 +149,10 @@ export default function Sidebar({ isMobileOpen, onMobileToggle }: SidebarProps) 
           onClick={handleLogout}
           disabled={isLoading}
           variant="ghost"
-          className="w-full justify-start gap-3 text-sidebar-foreground hover:bg-destructive/10 hover:text-destructive"
+          className="w-full justify-start gap-3 text-sidebar-foreground hover:bg-destructive/10 hover:text-destructive focus:outline-none focus:ring-2 focus:ring-destructive focus:ring-offset-2"
+          aria-label={isLoading ? "Cerrando sesión..." : "Cerrar sesión"}
         >
-          <LogOut className="h-5 w-5" />
+          <LogOut className="h-5 w-5" aria-hidden="true" />
           {isLoading ? "Cerrando..." : "Cerrar Sesión"}
         </Button>
       </div>
@@ -159,8 +165,11 @@ export default function Sidebar({ isMobileOpen, onMobileToggle }: SidebarProps) 
       <Button
         variant="ghost"
         size="icon"
-        className="md:hidden fixed top-4 left-4 z-50 bg-background/80 backdrop-blur-sm"
+        className="md:hidden fixed top-4 left-4 z-50 bg-background/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         onClick={onMobileToggle}
+        aria-label={isMobileOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}
+        aria-expanded={isMobileOpen}
+        aria-controls="mobile-sidebar"
       >
         {isMobileOpen ? (
           <X className="h-5 w-5" />
@@ -174,17 +183,20 @@ export default function Sidebar({ isMobileOpen, onMobileToggle }: SidebarProps) 
         <div
           className="fixed inset-0 bg-black/50 z-40 md:hidden"
           onClick={onMobileToggle}
+          aria-hidden="true"
         />
       )}
 
       {/* Sidebar */}
       <aside
+        id="mobile-sidebar"
         className={`
           fixed md:static inset-y-0 left-0 z-50 w-80 bg-sidebar border-r border-sidebar-border
           transform transition-transform duration-300 ease-in-out
           md:translate-x-0 ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
           flex flex-col
         `}
+        aria-label="Barra lateral de navegación"
       >
         {sidebarContent}
       </aside>
