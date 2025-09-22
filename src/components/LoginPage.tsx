@@ -236,31 +236,6 @@ export default function LoginPage() {
                     </Button>
                   </form>
 
-                  {/* Demo Credentials Helper */}
-                  <div className="mt-6 p-4 bg-muted rounded-lg">
-                    <p className="text-sm text-muted-foreground text-center mb-2">
-                      <strong>Credenciales de demostración:</strong>
-                    </p>
-                    <div className="text-sm text-center space-y-1">
-                      <p><strong>Email:</strong> demo@example.com</p>
-                      <p><strong>Contraseña:</strong> demo1234</p>
-                    </div>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="w-full mt-3"
-                      onClick={() => {
-                        setEmail("demo@example.com");
-                        setPassword("demo1234");
-                        setStatusMessage("Credenciales demo cargadas");
-                      }}
-                      disabled={isLoading}
-                      aria-label="Usar credenciales de demostración"
-                    >
-                      Usar credenciales demo
-                    </Button>
-                  </div>
                 </main>
               </div>
             </div>
