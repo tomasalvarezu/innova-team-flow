@@ -30,8 +30,15 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [isMarkingAllRead, setIsMarkingAllRead] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
+  const [isDemoUser, setIsDemoUser] = useState(false);
   
   const { toast } = useToast();
+
+  // Check if current user is demo user
+  useEffect(() => {
+    const demoStatus = localStorage.getItem("isDemoUser");
+    setIsDemoUser(demoStatus === "true");
+  }, []);
 
   const filterOptions = [
     { value: "all", label: "Todas" },
@@ -157,6 +164,15 @@ export default function Dashboard() {
       <StatusAnnouncer message={statusMessage} />
       
       <div className="flex-1 p-6 bg-background-light min-h-screen">
+        {/* Demo User Banner */}
+        {isDemoUser && (
+          <div className="bg-muted/50 border border-border rounded-lg px-4 py-2 mb-4 text-center">
+            <p className="text-sm text-muted-foreground">
+              Estás usando la cuenta de demostración (solo lectura)
+            </p>
+          </div>
+        )}
+        
         {/* Header */}
         <header className="bg-background rounded-lg shadow-soft p-6 mb-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">

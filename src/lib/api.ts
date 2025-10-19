@@ -9,6 +9,7 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 // Demo credentials
 export const DEMO_CREDENTIALS = {
   email: "demo@example.com",
+  username: "demouser",
   password: "demo1234",
 };
 
@@ -37,11 +38,16 @@ export const authAPI = {
   async login(email: string, password: string) {
     await delay(1000); // Simulate network delay
     
-    if (email === DEMO_CREDENTIALS.email && password === DEMO_CREDENTIALS.password) {
+    // Accept both email and username for demo login
+    const isDemoLogin = (email === DEMO_CREDENTIALS.email || email === DEMO_CREDENTIALS.username) 
+                        && password === DEMO_CREDENTIALS.password;
+    
+    if (isDemoLogin) {
       const user = {
         id: "1",
         name: "Demo User",
-        email: email,
+        email: DEMO_CREDENTIALS.email,
+        username: email === DEMO_CREDENTIALS.username ? DEMO_CREDENTIALS.username : undefined,
         role: "student",
         avatar: "/api/avatar/1",
       };
@@ -49,6 +55,7 @@ export const authAPI = {
       // Store user in localStorage for demo
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("token", "demo-token-123");
+      localStorage.setItem("isDemoUser", "true");
       
       return { success: true, user, token: "demo-token-123" };
     } else {
@@ -60,6 +67,7 @@ export const authAPI = {
     await delay(500);
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+    localStorage.removeItem("isDemoUser");
     return { success: true };
   },
 
