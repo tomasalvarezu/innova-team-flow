@@ -8,16 +8,8 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Demo credentials
 export const DEMO_CREDENTIALS = {
-  admin: {
-    username: "admin",
-    password: "admin1234",
-    role: "admin"
-  },
-  user: {
-    username: "user",
-    password: "user1234",
-    role: "user"
-  }
+  email: "demo@example.com",
+  password: "demo1234",
 };
 
 // Types
@@ -45,41 +37,20 @@ export const authAPI = {
   async login(email: string, password: string) {
     await delay(1000); // Simulate network delay
     
-    let user = null;
-    let userRole = null;
-    
-    // Check for admin credentials
-    if (email === DEMO_CREDENTIALS.admin.username && password === DEMO_CREDENTIALS.admin.password) {
-      user = {
-        id: "admin-1",
-        name: "Administrador",
-        username: DEMO_CREDENTIALS.admin.username,
-        email: "admin@example.com",
-        role: DEMO_CREDENTIALS.admin.role,
-        avatar: "/api/avatar/admin",
+    if (email === DEMO_CREDENTIALS.email && password === DEMO_CREDENTIALS.password) {
+      const user = {
+        id: "1",
+        name: "Demo User",
+        email: email,
+        role: "student",
+        avatar: "/api/avatar/1",
       };
-      userRole = "admin";
-    }
-    // Check for regular user credentials
-    else if (email === DEMO_CREDENTIALS.user.username && password === DEMO_CREDENTIALS.user.password) {
-      user = {
-        id: "user-1",
-        name: "Usuario Regular",
-        username: DEMO_CREDENTIALS.user.username,
-        email: "user@example.com",
-        role: DEMO_CREDENTIALS.user.role,
-        avatar: "/api/avatar/user",
-      };
-      userRole = "user";
-    }
-    
-    if (user) {
+      
       // Store user in localStorage for demo
       localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("token", `demo-token-${userRole}`);
-      localStorage.setItem("userRole", userRole);
+      localStorage.setItem("token", "demo-token-123");
       
-      return { success: true, user, token: `demo-token-${userRole}` };
+      return { success: true, user, token: "demo-token-123" };
     } else {
       throw new Error("Credenciales inválidas");
     }
@@ -89,7 +60,6 @@ export const authAPI = {
     await delay(500);
     localStorage.removeItem("user");
     localStorage.removeItem("token");
-    localStorage.removeItem("userRole");
     return { success: true };
   },
 

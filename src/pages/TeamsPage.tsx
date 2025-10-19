@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import { Users, Settings } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,18 +11,12 @@ import NotificationPermissionsDialog from "@/components/NotificationPermissionsD
 const mockTeam = {
   id: "team-1",
   name: "CodeFactory Sprint 1",
+  isAdmin: true, // Simula si el usuario es admin
 };
 
 export default function TeamsPage() {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isPermissionsDialogOpen, setIsPermissionsDialogOpen] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  // Check if current user is admin
-  useEffect(() => {
-    const userRole = localStorage.getItem("userRole");
-    setIsAdmin(userRole === "admin");
-  }, []);
 
   const toggleMobileSidebar = () => {
     setIsMobileSidebarOpen(!isMobileSidebarOpen);
@@ -46,7 +40,7 @@ export default function TeamsPage() {
           </div>
           
           {/* Settings button - solo visible para admins */}
-          {isAdmin && (
+          {mockTeam.isAdmin && (
             <Button
               variant="outline"
               size="icon"
@@ -67,7 +61,7 @@ export default function TeamsPage() {
           </TabsList>
 
           <TabsContent value="general">
-            <TeamNotificationsList teamId={mockTeam.id} isAdmin={isAdmin} />
+            <TeamNotificationsList teamId={mockTeam.id} isAdmin={mockTeam.isAdmin} />
           </TabsContent>
 
           <TabsContent value="integrantes">
