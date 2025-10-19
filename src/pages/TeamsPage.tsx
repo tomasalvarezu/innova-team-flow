@@ -1,10 +1,22 @@
 import { useState } from "react";
 import Sidebar from "@/components/Sidebar";
-import PlaceholderPage from "@/components/PlaceholderPage";
-import { Users } from "lucide-react";
+import { Users, Settings } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import TeamNotificationsList from "@/components/TeamNotificationsList";
+import TeamMembersList from "@/components/TeamMembersList";
+import NotificationPermissionsDialog from "@/components/NotificationPermissionsDialog";
+
+// Mock data - en producción vendría de la API
+const mockTeam = {
+  id: "team-1",
+  name: "CodeFactory Sprint 1",
+  isAdmin: true, // Simula si el usuario es admin
+};
 
 export default function TeamsPage() {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [isPermissionsDialogOpen, setIsPermissionsDialogOpen] = useState(false);
 
   const toggleMobileSidebar = () => {
     setIsMobileSidebarOpen(!isMobileSidebarOpen);
@@ -16,10 +28,53 @@ export default function TeamsPage() {
         isMobileOpen={isMobileSidebarOpen} 
         onMobileToggle={toggleMobileSidebar}
       />
-      <PlaceholderPage
-        title="Gestión de Equipos"
-        description="Forma equipos multidisciplinarios, colabora con otros estudiantes y gestiona tus proyectos de manera eficiente."
-        icon={Users}
+      
+      <main className="flex-1 p-6 md:p-8">
+        {/* Header */}
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+              <Users className="h-6 w-6 text-primary" />
+            </div>
+            <h1 className="text-2xl font-bold text-foreground">Equipos</h1>
+          </div>
+          
+          {/* Settings button - solo visible para admins */}
+          {mockTeam.isAdmin && (
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setIsPermissionsDialogOpen(true)}
+              className="rounded-lg hover:bg-destructive/10 hover:text-destructive hover:border-destructive"
+              aria-label="Configuración de permisos de notificaciones"
+            >
+              <Settings className="h-5 w-5" />
+            </Button>
+          )}
+        </div>
+
+        {/* Tabs */}
+        <Tabs defaultValue="general" className="w-full">
+          <TabsList className="mb-6">
+            <TabsTrigger value="general">General</TabsTrigger>
+            <TabsTrigger value="integrantes">Integrantes</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="general">
+            <TeamNotificationsList teamId={mockTeam.id} isAdmin={mockTeam.isAdmin} />
+          </TabsContent>
+
+          <TabsContent value="integrantes">
+            <TeamMembersList teamId={mockTeam.id} />
+          </TabsContent>
+        </Tabs>
+      </main>
+
+      {/* Dialog de permisos */}
+      <NotificationPermissionsDialog 
+        open={isPermissionsDialogOpen}
+        onOpenChange={setIsPermissionsDialogOpen}
+        teamId={mockTeam.id}
       />
     </div>
   );

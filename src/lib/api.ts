@@ -207,6 +207,68 @@ export const teamsAPI = {
     // In a real app, this would add the user to the team
     return { success: true, message: "Te has unido al equipo exitosamente" };
   },
+
+  async getTeamNotifications(teamId: string) {
+    await delay(800);
+    
+    const notifications = [
+      {
+        id: "1",
+        teamId,
+        title: "Nuevo miembro agregado",
+        description: "Juan Pérez ha sido agregado al equipo CodeFactory Sprint 1",
+        category: "[CodeFactory]",
+        categoryColor: "bg-team text-white",
+        createdAt: new Date(2025, 8, 17, 17, 35).toISOString(),
+        emailLink: "mailto:team@codefactory.com?subject=Nuevo%20Miembro",
+      },
+      {
+        id: "2",
+        teamId,
+        title: "Cambio de rol",
+        description: "María García ahora es Scrum Master del equipo",
+        category: "[Admin]",
+        categoryColor: "bg-admin text-white",
+        createdAt: new Date(2025, 8, 16, 14, 20).toISOString(),
+        emailLink: "mailto:team@codefactory.com?subject=Cambio%20Rol",
+      },
+    ];
+
+    return { success: true, notifications };
+  },
+
+  async getTeamMembers(teamId: string) {
+    await delay(800);
+    
+    const members = [
+      {
+        id: "1",
+        teamId,
+        name: "María García",
+        role: "Scrum Master",
+        roleColor: "bg-admin text-white",
+        email: "maria.garcia@example.com",
+      },
+      {
+        id: "2",
+        teamId,
+        name: "Juan Pérez",
+        role: "Frontend Developer",
+        roleColor: "bg-primary text-primary-foreground",
+        email: "juan.perez@example.com",
+      },
+      {
+        id: "3",
+        teamId,
+        name: "Ana López",
+        role: "Backend Developer",
+        roleColor: "bg-secondary text-secondary-foreground",
+        email: "ana.lopez@example.com",
+      },
+    ];
+
+    return { success: true, members };
+  },
 };
 
 // Projects API
