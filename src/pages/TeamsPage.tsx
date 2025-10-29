@@ -31,26 +31,11 @@ export default function TeamsPage() {
       
       <main className="flex-1 p-6 md:p-8">
         {/* Header */}
-        <div className="mb-6 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-              <Users className="h-6 w-6 text-primary" />
-            </div>
-            <h1 className="text-2xl font-bold text-foreground">Equipos</h1>
+        <div className="mb-6 flex items-center gap-3">
+          <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+            <Users className="h-6 w-6 text-primary" />
           </div>
-          
-          {/* Settings button - solo visible para admins */}
-          {mockTeam.isAdmin && (
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setIsPermissionsDialogOpen(true)}
-              className="rounded-lg hover:bg-destructive/10 hover:text-destructive hover:border-destructive"
-              aria-label="Configuración de permisos de notificaciones"
-            >
-              <Settings className="h-5 w-5" />
-            </Button>
-          )}
+          <h1 className="text-2xl font-bold text-foreground">Equipos</h1>
         </div>
 
         {/* Tabs */}
@@ -61,7 +46,11 @@ export default function TeamsPage() {
           </TabsList>
 
           <TabsContent value="general">
-            <TeamNotificationsList teamId={mockTeam.id} isAdmin={mockTeam.isAdmin} />
+            <TeamNotificationsList 
+              teamId={mockTeam.id} 
+              isAdmin={mockTeam.isAdmin}
+              onOpenSettings={() => setIsPermissionsDialogOpen(true)}
+            />
           </TabsContent>
 
           <TabsContent value="integrantes">

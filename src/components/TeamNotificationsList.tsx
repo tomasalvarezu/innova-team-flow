@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
-import { Bell, BellOff } from "lucide-react";
+import { Bell, BellOff, Settings } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface TeamNotification {
@@ -20,6 +20,7 @@ interface TeamNotification {
 interface TeamNotificationsListProps {
   teamId: string;
   isAdmin: boolean;
+  onOpenSettings: () => void;
 }
 
 // Mock data
@@ -35,7 +36,7 @@ const mockNotifications: TeamNotification[] = [
   },
 ];
 
-export default function TeamNotificationsList({ teamId, isAdmin }: TeamNotificationsListProps) {
+export default function TeamNotificationsList({ teamId, isAdmin, onOpenSettings }: TeamNotificationsListProps) {
   const [isSubscribed, setIsSubscribed] = useState(true);
   const { toast } = useToast();
   const [notifications] = useState(mockNotifications);
@@ -108,13 +109,28 @@ export default function TeamNotificationsList({ teamId, isAdmin }: TeamNotificat
                   </a>
                 </div>
 
-                {/* Date */}
-                <time className="text-xs text-muted-foreground whitespace-nowrap">
-                  {formatDistanceToNow(new Date(notification.createdAt), {
-                    addSuffix: true,
-                    locale: es,
-                  })}
-                </time>
+                {/* Date and Settings */}
+                <div className="flex flex-col items-end gap-2">
+                  <time className="text-xs text-muted-foreground whitespace-nowrap">
+                    {formatDistanceToNow(new Date(notification.createdAt), {
+                      addSuffix: true,
+                      locale: es,
+                    })}
+                  </time>
+                  
+                  {/* Settings button - solo visible para admins */}
+                  {isAdmin && (
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={onOpenSettings}
+                      className="h-8 w-8 rounded-lg hover:bg-destructive/10 hover:text-destructive hover:border-destructive"
+                      aria-label="Configuración de permisos de notificaciones"
+                    >
+                      <Settings className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
               </div>
             </Card>
           ))
