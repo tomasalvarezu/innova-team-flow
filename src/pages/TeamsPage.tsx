@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import { Users, Settings } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -17,6 +17,13 @@ const mockTeam = {
 export default function TeamsPage() {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isPermissionsDialogOpen, setIsPermissionsDialogOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    // Check user role from localStorage
+    const userRole = localStorage.getItem("userRole");
+    setIsAdmin(userRole === "admin");
+  }, []);
 
   const toggleMobileSidebar = () => {
     setIsMobileSidebarOpen(!isMobileSidebarOpen);
@@ -48,7 +55,7 @@ export default function TeamsPage() {
           <TabsContent value="general">
             <TeamNotificationsList 
               teamId={mockTeam.id} 
-              isAdmin={mockTeam.isAdmin}
+              isAdmin={isAdmin}
               onOpenSettings={() => setIsPermissionsDialogOpen(true)}
             />
           </TabsContent>

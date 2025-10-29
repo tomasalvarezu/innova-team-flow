@@ -8,8 +8,16 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Demo credentials
 export const DEMO_CREDENTIALS = {
-  email: "demo@example.com",
-  password: "demo1234",
+  admin: {
+    email: "admin@example.com",
+    password: "admin1234",
+    role: "admin"
+  },
+  user: {
+    email: "usuario@example.com",
+    password: "usuario1234",
+    role: "user"
+  }
 };
 
 // Types
@@ -37,17 +45,32 @@ export const authAPI = {
   async login(email: string, password: string) {
     await delay(1000); // Simulate network delay
     
-    if (email === DEMO_CREDENTIALS.email && password === DEMO_CREDENTIALS.password) {
+    let userRole = null;
+    let userName = "";
+    
+    // Check admin credentials
+    if (email === DEMO_CREDENTIALS.admin.email && password === DEMO_CREDENTIALS.admin.password) {
+      userRole = DEMO_CREDENTIALS.admin.role;
+      userName = "Administrador";
+    }
+    // Check user credentials
+    else if (email === DEMO_CREDENTIALS.user.email && password === DEMO_CREDENTIALS.user.password) {
+      userRole = DEMO_CREDENTIALS.user.role;
+      userName = "Usuario Estándar";
+    }
+    
+    if (userRole) {
       const user = {
-        id: "1",
-        name: "Demo User",
+        id: userRole === "admin" ? "1" : "2",
+        name: userName,
         email: email,
-        role: "student",
+        role: userRole,
         avatar: "/api/avatar/1",
       };
       
-      // Store user in localStorage for demo
+      // Store user and role in localStorage for demo
       localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("userRole", userRole);
       localStorage.setItem("token", "demo-token-123");
       
       return { success: true, user, token: "demo-token-123" };
@@ -59,6 +82,7 @@ export const authAPI = {
   async logout() {
     await delay(500);
     localStorage.removeItem("user");
+    localStorage.removeItem("userRole");
     localStorage.removeItem("token");
     return { success: true };
   },
